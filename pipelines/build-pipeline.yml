@@ -12,7 +12,7 @@ pool:
   vmImage: 'ubuntu-latest'
 variables:
   serviceConnection: 'Azure CXP FTA Internal Subscription CBELLEE (b2375b5f-8dab-4436-b87c-32bc7fdce5d0)'
-  acrName: acr66b980
+  acrName: $(azureContainerRegistryName)
   version.Major: 0
   version.Minor: 1
   version.Patch: 0

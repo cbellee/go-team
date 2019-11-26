@@ -12,6 +12,8 @@ variables:
   location: australiaeast
   projectName: go-team
   acrResourceGroupName: $(projectName)-acr-rg
+  devResourceGroupName: dev-$(projectName)-rg
+  testResourceGroupName: tst-$(projectName)-rg
   containerName: 'templates'
   timeStamp: $[format('{0:yyyy}-{0:MM}-{0:dd}-{0:HHmmss}', pipeline.startTime)]
   aksVersion: 1.15.5
@@ -60,14 +62,11 @@ stages:
 - stage: 'dev'
   displayName: 'dev environment release'
   variables:
-    environmentName: dev
-    resourceGroupName: "$(projectName)-rg"
-    tags: '{"costCentre":"478132","project":"$(projectName)"}'
   jobs:
     - deployment:
       pool:
         vmImage: 'ubuntu-latest'
-      environment:  "$(environmentName)-$(projectName)"
+      environment: dev-$(projectName)
       strategy:
        runOnce:
         deploy:
@@ -89,7 +88,7 @@ stages:
             inputs:
               action: Create Or Update Resource Group
               azureSubscription: $(serviceConnection)
-              resourceGroupName: $(resourceGroupName)
+              resourceGroupName: $(devResourceGroupName)
               csmFile: ./templates/nested/storage.json
               location: $(location)
               templateLocation: Linked artifact
@@ -126,7 +125,7 @@ stages:
             inputs:
               action: Create Or Update Resource Group
               azureSubscription: $(serviceConnection)
-              resourceGroupName: $(resourceGroupName)
+              resourceGroupName: $(devResourceGroupName)
               csmFile: ./templates/azuredeploy.json
               csmParametersFile: ./templates/azuredeploy.parameters.json
               location: $(location)
@@ -151,7 +150,7 @@ stages:
             inputs:
               ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
               ConnectedServiceNameARM: $(serviceConnection)
-              resourceGroupName: $(resourceGroupName)
+              resourceGroupName: $(devResourceGroupName)
               whenLastDeploymentIsFailed: 'fail'
               deploymentNameFilter: "resourceDeployment-$(timeStamp)"
 
