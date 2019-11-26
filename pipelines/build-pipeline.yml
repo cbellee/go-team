@@ -28,5 +28,5 @@ steps:
     azureSubscription: $(serviceConnection)
     scriptType: 'pscore'
     scriptLocation: 'inlineScript'
-    inlineScript: 'az acr build --registry $(acrName) --image $(imageName):$(imageVersion) .'
+    inlineScript: 'az acr build --registry $(acrName) --image $(imageName):$(imageVersion) ./api'
     
