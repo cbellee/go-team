@@ -9,6 +9,8 @@ import (
 )
 
 // HTTP event handlers
+
+// allColours handler
 func (env *Env) allColours(c echo.Context) error {
 	colours, err := env.db.AllColours()
 	if err != nil {
