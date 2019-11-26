@@ -8,7 +8,7 @@ trigger:
 variables:
   serviceConnection: 'Azure CXP FTA Internal Subscription CBELLEE (b2375b5f-8dab-4436-b87c-32bc7fdce5d0)'
   location: australiaeast
-  acrResourceGroupName: ago-team-rg
+  acrResourceGroupName: go-team-rg
   containerName: 'templates'
   timeStamp: $[format('{0:yyyy}-{0:MM}-{0:dd}-{0:HHmmss}', pipeline.startTime)]
   aksVersion: 1.14.6
