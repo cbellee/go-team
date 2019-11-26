@@ -13,7 +13,7 @@ variables:
   acrResourceGroupName: go-team-rg
   containerName: 'templates'
   timeStamp: $[format('{0:yyyy}-{0:MM}-{0:dd}-{0:HHmmss}', pipeline.startTime)]
-  aksVersion: 1.14.6
+  aksVersion: 1.15.5
   aksNodeCount: 1
   maxPods: 50
   aksMinNodeCount: 1
