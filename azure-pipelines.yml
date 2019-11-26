@@ -1,0 +1,27 @@
+# Build Pipeline
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+variables:
+  serviceConnection: 'Azure CXP FTA Internal Subscription CBELLEE (b2375b5f-8dab-4436-b87c-32bc7fdce5d0)'
+  acrName: acr66b980
+  version.Major: 0
+  version.Minor: 1
+  version.Patch: 0
+  version.Revision: $[counter(variables['version.Patch'], 0)]
+  imageVersion: "$(version.Major).$(version.Minor).$(version.Patch).$(Build.BuildId)"
+  imageName: $(Build.Repository.Name)
+
+steps:
+- task: AzureCLI@2
+  displayName: 'Push and Build Image in ACR'
+  enabled: true
+  inputs:
+    azureSubscription: $(serviceConnection)
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az acr build --registry $(acrName) --image $(imageName):$(imageVersion) .'
+    
