@@ -11,6 +11,7 @@ variables:
   aksServicePrincipalObjectId: 'd37981d6-bc89-4019-8c51-96a111f0bf62'
   location: australiaeast
   projectName: go-team
+  tags: '{"costCentre":"478132","project":"$(projectName)"}'
   acrResourceGroupName: $(projectName)-acr-rg
   devResourceGroupName: dev-$(projectName)-rg
   testResourceGroupName: tst-$(projectName)-rg
