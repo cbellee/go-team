@@ -3,6 +3,10 @@
 trigger:
 - master
 
+paths:
+  include:
+  - api/*
+
 pool:
   vmImage: 'ubuntu-latest'
 variables:
