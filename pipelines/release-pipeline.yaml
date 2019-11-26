@@ -7,10 +7,8 @@ trigger:
 
 variables:
   serviceConnection: 'Azure CXP FTA Internal Subscription CBELLEE (b2375b5f-8dab-4436-b87c-32bc7fdce5d0)'
-  #aksServiceConnection: aks-7ead-default-cxn
-  #acrServiceConnection: goblockchain-acr-cxn
   location: australiaeast
-  acrResourceGroupName: acr-aks-slb-rg
+  acrResourceGroupName: ago-team-rg
   containerName: 'templates'
   timeStamp: $[format('{0:yyyy}-{0:MM}-{0:dd}-{0:HHmmss}', pipeline.startTime)]
   aksVersion: 1.14.6
@@ -56,14 +54,6 @@ stages:
             whenLastDeploymentIsFailed: 'fail'
             deploymentNameFilter: "acrDeployment-$(timeStamp)"
 
-        - task: AzureCLI@1
-          displayName: 'Build container image in ACR'
-          enabled: false
-          inputs:
-            azureSubscription: $(serviceConnection)
-            scriptLocation: 'inlineScript'
-            inlineScript: 'az acr build --image $(Build.Repository.Name) --registry $(registryName) --file ./Dockerfile .'
-
 - stage: 'dev'
   displayName: 'dev environment release'
   variables:
@@ -81,6 +71,7 @@ stages:
         deploy:
           steps:
           - checkout: self # needed to checkout repo!
+
           - task: PowerShell@2
             inputs:
               targetType: 'inline'
@@ -88,6 +79,7 @@ stages:
                 $now = Get-Date
                 $sasTokenExpiry = $now.AddHours(2).ToString('u') -replace ' ','T'
                 Write-Host "##vso[task.setvariable variable=sasTokenExpiry;]$sasTokenExpiry"
+
           - task: AzureResourceGroupDeployment@2
             name: 'DeployStorage'
             displayName: 'Deploy storage account for arm templates'
@@ -100,19 +92,22 @@ stages:
               location: $(location)
               templateLocation: Linked artifact
               deploymentMode: Incremental
+              deploymentOutputs: storageDeploymentOutput
               deploymentName: "storageDeployment-$(timeStamp)"
               overrideParameters: -sasTokenExpiry $(sasTokenExpiry) -storageSku Standard_LRS -storageKind StorageV2 -tags $(tags) -containerName $(containerName)
 
-          - task: ARM Outputs@5
-            name: 'GetStorageDeploymentOutput'
-            displayName: 'Get ARM Storage Deployment Output'
-            enabled: true
+          - task: PowerShell@2
+            name: 'storage_deployment_output'
+            displayName: 'Get Storage Deployment Output'
             inputs:
-              ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
-              ConnectedServiceNameARM: $(serviceConnection)
-              resourceGroupName: $(resourceGroupName)
-              whenLastDeploymentIsFailed: 'fail'
-              deploymentNameFilter: "storageDeployment-$(timeStamp)"
+              targetType: 'inline'
+              script: |
+                $outputs = '$(storageDeploymentOutput)' | ConvertFrom-Json
+                foreach ($output in $outputs.PSObject.Properties) {
+                  Write-Host "$($output.Name) - $($output.Value.value)"
+                  Write-Host "##vso[task.setvariable variable=$($output.Name);]$($output.Value.value)" 
+                  Write-Host "##vso[task.setvariable variable=$($output.Name);isOutput=true]$($output.Value.value)" 
+                }
 
           - task: AzureCLI@1
             displayName: 'Copy ARM template files to Azure blob storage'
@@ -149,6 +144,7 @@ stages:
                 -aksServicePrincipalAppId $(aksServicePrincipalAppId)
                 -aksServicePrincipalSecret $(aksServicePrincipalSecret)
                 -applicationGatewaySku $(applicationGatewaySku)
+
           - task: ARM Outputs@5
             name: 'GetResourceDeploymentOutput'
             displayName: 'Get ARM Resource Deployment Output'
@@ -159,9 +155,11 @@ stages:
               resourceGroupName: $(resourceGroupName)
               whenLastDeploymentIsFailed: 'fail'
               deploymentNameFilter: "resourceDeployment-$(timeStamp)"
+
           - task: HelmInstaller@1
             displayName: 'Install Helm'
             enabled: false
+            
           - task: AzureCLI@1
             displayName: 'Install Istio'
             enabled: false
@@ -170,8 +168,9 @@ stages:
               scriptLocation: scriptPath
               scriptPath: ./scripts/install-istio.sh
               arguments: -r $(resourceGroupName) -n $(aksName)
+
           - task: AzureCLI@1
-            displayName: 'Install Voting App'
+            displayName: 'Install Go Team API'
             enabled: false
             inputs:
               azureSubscription: $(serviceConnection)
