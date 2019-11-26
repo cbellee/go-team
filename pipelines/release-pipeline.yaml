@@ -61,7 +61,6 @@ stages:
 
 - stage: 'dev'
   displayName: 'dev environment release'
-  variables:
   jobs:
     - deployment:
       pool:
