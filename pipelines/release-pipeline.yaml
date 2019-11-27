@@ -13,8 +13,6 @@ variables:
   projectName: go-team
   tags: '{"costCentre":"478132","project":"$(projectName)"}'
   acrResourceGroupName: $(projectName)-acr-rg
-  devResourceGroupName: dev-$(projectName)-rg
-  testResourceGroupName: tst-$(projectName)-rg
   containerName: 'templates'
   timeStamp: $[format('{0:yyyy}-{0:MM}-{0:dd}-{0:HHmmss}', pipeline.startTime)]
   aksVersion: 1.15.5
