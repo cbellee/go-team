@@ -66,7 +66,7 @@ stages:
     - deployment:
       pool:
         vmImage: 'ubuntu-latest'
-      environment: dev-$(projectName)
+      environment: $(projectName)-dev
       strategy:
        runOnce:
         deploy:
@@ -88,7 +88,7 @@ stages:
             inputs:
               action: Create Or Update Resource Group
               azureSubscription: $(serviceConnection)
-              resourceGroupName: $(devResourceGroupName)
+              resourceGroupName: $(projectName)-dev-rg
               csmFile: ./templates/nested/storage.json
               location: $(location)
               templateLocation: Linked artifact
@@ -125,7 +125,7 @@ stages:
             inputs:
               action: Create Or Update Resource Group
               azureSubscription: $(serviceConnection)
-              resourceGroupName: $(devResourceGroupName)
+              resourceGroupName: $(projectName)-dev-rg
               csmFile: ./templates/azuredeploy.json
               csmParametersFile: ./templates/azuredeploy.parameters.json
               location: $(location)
@@ -150,7 +150,7 @@ stages:
             inputs:
               ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
               ConnectedServiceNameARM: $(serviceConnection)
-              resourceGroupName: $(devResourceGroupName)
+              resourceGroupName: $(projectName)-dev-rg
               whenLastDeploymentIsFailed: 'fail'
               deploymentNameFilter: "resourceDeployment-$(timeStamp)"
 
