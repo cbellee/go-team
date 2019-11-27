@@ -10,7 +10,8 @@ variables:
   aksServicePrincipalAppId: 'de3ef06a-2824-4dce-b714-65ba1b5e0744'
   aksServicePrincipalObjectId: 'd37981d6-bc89-4019-8c51-96a111f0bf62'
   location: australiaeast
-  acrResourceGroupName: go-team-rg
+  projectName: go-team
+  acrResourceGroupName: $(projectName)-acr-rg
   containerName: 'templates'
   timeStamp: $[format('{0:yyyy}-{0:MM}-{0:dd}-{0:HHmmss}', pipeline.startTime)]
   aksVersion: 1.15.5
@@ -60,14 +61,13 @@ stages:
   displayName: 'dev environment release'
   variables:
     environmentName: dev
-    projectName: "$(environmentName)-aks-slb"
     resourceGroupName: "$(projectName)-rg"
     tags: '{"costCentre":"478132","project":"$(projectName)"}'
   jobs:
-    - deployment: 
+    - deployment:
       pool:
         vmImage: 'ubuntu-latest'
-      environment: $(environmentName)
+      environment:  "$(environmentName)-$(projectName)"
       strategy:
        runOnce:
         deploy:
