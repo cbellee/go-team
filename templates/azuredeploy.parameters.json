@@ -46,7 +46,7 @@
         },
         "aksNodeVMSize": {
             "value": "Standard_D4s_v3"
-        },
+        }/* ,
         "aksServicePrincipalAppId": {
             "value": null
         },
@@ -55,6 +55,6 @@
         },
         "aksServicePrincipalObjectId": {
             "value": null
-        }
+        } */
     }
 }

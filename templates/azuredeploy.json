@@ -36,8 +36,8 @@
         "maxPods": {
             "type": "int",
             "defaultValue": 50
-        },
-        "aksServicePrincipalAppId": {
+        }
+        /* "aksServicePrincipalAppId": {
             "type": "string"
         },
         "aksServicePrincipalSecret": {
@@ -45,7 +45,7 @@
         },
         "aksServicePrincipalObjectId": {
             "type": "string"
-        }
+        } */
     },
     "variables": {
         "resgpguid": "[substring(replace(guid(resourceGroup().id), '-', ''), 0, 6)]"
@@ -111,15 +111,16 @@
                     "aksSubnetId": {
                         "value": "[reference('Microsoft.Resources/deployments/linkedTemplate-vnet-0').outputs.subnetRefs.value[0].id]"
                     },
-                    "aksVnetName": {
+/*                     "aksVnetName": {
                         "value": "[concat(parameters('vNets')[0].name, '-', variables('resgpguid'))]"
-                    },
+                    }, */
                     "aksNodeVMSize": {
                         "value": "[parameters('aksNodeVMSize')]"
-                    },
-                    "aksSubnetName": {
+                    }
+/*                     "aksSubnetName": {
                         "value": "[reference('Microsoft.Resources/deployments/linkedTemplate-vnet-0').outputs.subnetRefs.value[0].name]"
-                    },
+                    } */
+                    /* ,
                     "aksServicePrincipalAppId": {
                         "value": "[parameters('aksServicePrincipalAppId')]"
                     },
@@ -128,7 +129,7 @@
                     },
                     "aksServicePrincipalObjectId": {
                         "value": "[parameters('aksServicePrincipalObjectId')]"
-                    }
+                    } */
                 }
             }
         }

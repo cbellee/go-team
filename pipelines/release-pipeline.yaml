@@ -139,9 +139,9 @@ stages:
                 -aksNodeCount $(aksNodeCount)
                 -aksNodeVMSize $(aksNodeVMSize)
                 -maxPods $(maxPods)
-                -aksServicePrincipalObjectId $(aksServicePrincipalObjectId)
-                -aksServicePrincipalAppId $(aksServicePrincipalAppId)
-                -aksServicePrincipalSecret $(aksServicePrincipalSecret)
+                #-aksServicePrincipalObjectId $(aksServicePrincipalObjectId)
+                #-aksServicePrincipalAppId $(aksServicePrincipalAppId)
+                #-aksServicePrincipalSecret $(aksServicePrincipalSecret)
 
           - task: ARM Outputs@5
             name: 'GetResourceDeploymentOutput'
