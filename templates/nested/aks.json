@@ -352,14 +352,13 @@
         }
     },
     "variables": {
+        "aksVnetName": "[concat(parameters('aksVnetName'), '-', parameters('suffix'))]",
         "workspaceName": "[concat('workspace', '-', parameters('suffix'))]",
         "storageAccountName": "[concat('stor', parameters('suffix'))]",
         "identityName": "[concat('aksIdentityAccess' , '-', parameters('suffix'))]",
         "aksClusterName": "[concat('aks' , '-', parameters('suffix'))]",
-        "identityId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]",
         "aksClusterId": "[resourceId('Microsoft.ContainerService/managedClusters', variables('aksClusterName'))]",
-        "networkContributorRole": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
-        "managedIdentityOperatorRole": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'f1a07417-d97a-45cb-824c-7a7467783830')]"
+        "networkContributorRole": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]"
     },
     "resources": [
         {
@@ -412,22 +411,11 @@
                         {
                             "type": "Microsoft.Network/virtualNetworks/subnets/providers/roleAssignments",
                             "apiVersion": "2017-05-01",
-                            "name": "[concat(parameters('aksVnetName'), '/', parameters('aksSubnetName'),'/Microsoft.Authorization/', guid(resourceGroup().id, 'aksvnetaccess'))]",
+                            "name": "[concat(variables('aksVnetName'), '/', parameters('aksSubnetName'),'/Microsoft.Authorization/', guid(resourceGroup().id, 'aksvnetaccess'))]",
                             "properties": {
                                 "roleDefinitionId": "[variables('networkContributorRole')]",
                                 "principalId": "[parameters('aksServicePrincipalObjectId')]",
                                 "scope": "[parameters('aksSubnetId')]"
-                            }
-                        },
-                        {
-                            "type": "Microsoft.ManagedIdentity/userAssignedIdentities/providers/roleAssignments",
-                            "apiVersion": "2017-05-01",
-                            "name": "[concat(variables('identityName'), '/Microsoft.Authorization/', guid(resourceGroup().id, 'aksidentityaccess'))]",
-                            "properties": {
-                                "roleDefinitionId": "[variables('managedIdentityOperatorRole')]",
-                                "principalId": "[parameters('aksServicePrincipalObjectId')]",
-                                "scope": "[variables('identityId')]",
-                                "principalType": "ServicePrincipal"
                             }
                         }
                     ]
