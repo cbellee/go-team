@@ -113,7 +113,7 @@
                         "value": "[reference('Microsoft.Resources/deployments/linkedTemplate-vnet-0').outputs.subnetRefs.value[0].id]"
                     },
                     "aksVnetName": {
-                        "value": "[parameters('vNets')[0].namwe]"
+                        "value": "[parameters('vNets')[0].name]"
                     },
                     "aksSubnetName": {
                         "value": "[parameters('vNets')[0].subnets[0].name]"
