@@ -1,174 +1,53 @@
-# Pipeline to deploy Network, AKS & SLB
-
 name: deployAzureResources
 
 trigger:
 - master
 
+resources:
+  containers:
+    - container: 'go-team-api-hook'
+      type: ACR
+      azureSubscription: 'Azure CXP FTA Internal Subscription CBELLEE (b2375b5f-8dab-4436-b87c-32bc7fdce5d0)'
+      resourceGroup: go-team-acr-rg
+      registry: acrd8f374
+      repository: go-team-api
+      trigger: true
+
 variables:
   serviceConnection: 'Azure CXP FTA Internal Subscription CBELLEE (b2375b5f-8dab-4436-b87c-32bc7fdce5d0)'
-  aksServicePrincipalAppId: 'de3ef06a-2824-4dce-b714-65ba1b5e0744'
-  aksServicePrincipalObjectId: 'd37981d6-bc89-4019-8c51-96a111f0bf62'
+  acrConnection: 'acrd8f374-acr-cxn'
   location: australiaeast
   projectName: go-team
-  tags: '{"costCentre":"478132","project":"$(projectName)"}'
-  acrResourceGroupName: $(projectName)-acr-rg
-  containerName: 'templates'
   timeStamp: $[format('{0:yyyy}-{0:MM}-{0:dd}-{0:HHmmss}', pipeline.startTime)]
-  aksVersion: 1.15.5
-  aksNodeCount: 1
-  maxPods: 50
-  aksMinNodeCount: 1
-  aksMaxNodeCount: 5
-  aksNodeVMSize: Standard_F2s_v2
-  applicationGatewaySku: WAF_v2
 
 stages:
-- stage: 'prerequisite_resources'
-  displayName: 'prerequisite resources'
-  
-  jobs:
-    - job: 'prerequisite_resource_job'
-      pool:
-        vmImage: 'ubuntu-latest'
-      steps:
-        - task: AzureResourceGroupDeployment@2
-          name: 'deployACR'
-          displayName: 'Deploy Azure Container Registry'
-          enabled: true
-          inputs:
-            action: Create Or Update Resource Group
-            azureSubscription: $(serviceConnection)
-            resourceGroupName: $(acrResourceGroupName)
-            csmFile: ./templates/nested/acr.json
-            location: $(location)
-            templateLocation: Linked artifact
-            deploymentMode: Incremental
-            deploymentName: "acrDeployment-$(timeStamp)"
-            outputVariable: acrTemplateOutput
-        
-        - task: ARM Outputs@5
-          name: 'GetACRDeploymentOutput'
-          displayName: 'Get ACR Deployment Output'
-          enabled: true
-          inputs:
-            ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
-            ConnectedServiceNameARM: $(serviceConnection)
-            resourceGroupName: $(acrResourceGroupName)
-            whenLastDeploymentIsFailed: 'fail'
-            deploymentNameFilter: "acrDeployment-$(timeStamp)"
-
 - stage: 'dev'
   displayName: 'dev environment release'
   jobs:
-    - deployment:
-      pool:
-        vmImage: 'ubuntu-latest'
-      environment: $(projectName)-dev
-      strategy:
-       runOnce:
-        deploy:
-          steps:
-          - checkout: self # needed to checkout repo!
-
-          - task: PowerShell@2
-            inputs:
-              targetType: 'inline'
-              script: |
-                $now = Get-Date
-                $sasTokenExpiry = $now.AddHours(2).ToString('u') -replace ' ','T'
-                Write-Host "##vso[task.setvariable variable=sasTokenExpiry;]$sasTokenExpiry"
-
-          - task: AzureResourceGroupDeployment@2
-            name: 'DeployStorage'
-            displayName: 'Deploy storage account for arm templates'
-            enabled: true
-            inputs:
-              action: Create Or Update Resource Group
-              azureSubscription: $(serviceConnection)
-              resourceGroupName: $(projectName)-dev-rg
-              csmFile: ./templates/nested/storage.json
-              location: $(location)
-              templateLocation: Linked artifact
-              deploymentMode: Incremental
-              deploymentOutputs: storageDeploymentOutput
-              deploymentName: "storageDeployment-$(timeStamp)"
-              overrideParameters: -sasTokenExpiry $(sasTokenExpiry) -storageSku Standard_LRS -storageKind StorageV2 -tags $(tags) -containerName $(containerName)
-
-          - task: PowerShell@2
-            name: 'storage_deployment_output'
-            displayName: 'Get Storage Deployment Output'
-            inputs:
-              targetType: 'inline'
-              script: |
-                $outputs = '$(storageDeploymentOutput)' | ConvertFrom-Json
-                foreach ($output in $outputs.PSObject.Properties) {
-                  Write-Host "$($output.Name) - $($output.Value.value)"
-                  Write-Host "##vso[task.setvariable variable=$($output.Name);]$($output.Value.value)" 
-                  Write-Host "##vso[task.setvariable variable=$($output.Name);isOutput=true]$($output.Value.value)" 
-                }
-
-          - task: AzureCLI@1
-            displayName: 'Copy ARM template files to Azure blob storage'
-            enabled: true
-            inputs:
-              azureSubscription: $(serviceConnection)
-              scriptLocation: 'inlineScript'
-              inlineScript: 'az storage blob upload-batch -d $(containerName) -s ./templates/nested/ --pattern *.json --account-name $(storageAccountName)'
+    - job:
+      steps:
+        - task: Bash@3
+          name: 'downloadscripts'
+          displayName: 'Download Scripts'
+          inputs:
+            targetType: filePath
+            filePath: ../scripts/downloadscripts.sh
+        
+        - task: Bash@3
+          name: 'runrelease'
+          displayName: 'Run release'
+          env:
+            ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
+            COMMIT_MESSAGE: "Updating image tag to $(Build.BuildNumber)"
+            SUBCOMPONENT: 'go-team-api'
+            YAML_PATH_VALUE: $(Build.BuildNumber)
+            YAML_PATH: image.tag
+          inputs:
+            targetType: inline
+            script: |
+              # execute release.sh
+              . release.sh
+              
+              
       
-          - task: AzureResourceGroupDeployment@2
-            name: 'deployResources'
-            displayName: 'Deploy resources'
-            enabled: true
-            inputs:
-              action: Create Or Update Resource Group
-              azureSubscription: $(serviceConnection)
-              resourceGroupName: $(projectName)-dev-rg
-              csmFile: ./templates/azuredeploy.json
-              csmParametersFile: ./templates/azuredeploy.parameters.json
-              location: $(location)
-              templateLocation: Linked artifact
-              deploymentMode: Incremental
-              deploymentName: "resourceDeployment-$(timeStamp)"
-              overrideParameters: 
-                -storageUri $(storageContainerUri)
-                -sasToken $(storageAccountSasToken)
-                -aksVersion $(aksVersion)
-                -aksNodeCount $(aksNodeCount)
-                -aksNodeVMSize $(aksNodeVMSize)
-                -maxPods $(maxPods)
-                -aksServicePrincipalObjectId $(aksServicePrincipalObjectId)
-                -aksServicePrincipalAppId $(aksServicePrincipalAppId)
-                -aksServicePrincipalSecret $(aksServicePrincipalSecret)
-
-          - task: ARM Outputs@5
-            name: 'GetResourceDeploymentOutput'
-            displayName: 'Get ARM Resource Deployment Output'
-            enabled: true
-            inputs:
-              ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
-              ConnectedServiceNameARM: $(serviceConnection)
-              resourceGroupName: $(projectName)-dev-rg
-              whenLastDeploymentIsFailed: 'fail'
-              deploymentNameFilter: "resourceDeployment-$(timeStamp)"
-
-          - task: HelmInstaller@1
-            displayName: 'Install Helm'
-            enabled: false
-            
-          - task: AzureCLI@1
-            displayName: 'Install Istio'
-            enabled: false
-            inputs:
-              azureSubscription: $(serviceConnection)
-              scriptLocation: scriptPath
-              scriptPath: ./scripts/install-istio.sh
-              arguments: -r $(resourceGroupName) -n $(aksName)
-
-          - task: AzureCLI@1
-            displayName: 'Install Go Team API'
-            enabled: false
-            inputs:
-              azureSubscription: $(serviceConnection)
-              scriptLocation: scriptPath
-              scriptPath: ./scripts/install-apps.sh
+      
