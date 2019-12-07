@@ -39,7 +39,7 @@ stages:
           env:
             ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
             COMMIT_MESSAGE: "Updating image tag to $(Build.BuildNumber)"
-            SUBCOMPONENT: 'go-team-api'
+            SUBCOMPONENT: 'go-team'
             YAML_PATH_VALUE: $(Build.BuildNumber)
             YAML_PATH: image.tag
           inputs:
