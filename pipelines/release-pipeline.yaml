@@ -30,8 +30,15 @@ stages:
           name: 'downloadscripts'
           displayName: 'Download Scripts'
           inputs:
-            targetType: filePath
-            filePath: ../scripts/downloadscripts.sh
+            targetType: inline
+            script: |
+              # Download build.sh
+              curl https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/build.sh > build.sh
+              chmod +x ./build.sh
+
+              # Download release.sh
+              curl https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/release.sh > release.sh
+              chmod +x ./release.sh
         
         - task: Bash@3
           name: 'runrelease'
