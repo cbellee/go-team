@@ -1,4 +1,4 @@
-name: deployAzureResources
+name: acrImageTrigger
 
 trigger:
 - master
