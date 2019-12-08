@@ -2,10 +2,6 @@
 # cbellee.go-team-cd
 
 name: acrImageTrigger
-
-trigger:
-- master
-
 resources:
   containers:
     - container: 'go-team-api-hook'
