@@ -30,6 +30,5 @@ steps:
     scriptType: 'pscore'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      echo 'building image $(imageName):$(imageVersion) in registry $(azureContainerRegistryName)'
       'az acr build --registry $(acrName) --image $(imageName):$(imageVersion) ./api'
     
