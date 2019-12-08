@@ -4,12 +4,12 @@
 name: acrImageTrigger
 resources:
   containers:
-    - container: 'go-team-api-hook'
+    - container: go-team
       type: ACR
       azureSubscription: 'Azure CXP FTA Internal Subscription CBELLEE (b2375b5f-8dab-4436-b87c-32bc7fdce5d0)'
       resourceGroup: go-team-acr-rg
       registry: acrd8f374
-      repository: cbellee/go-team
+      repository: cbellee
       trigger: true
 
 variables:
