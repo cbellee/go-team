@@ -1,3 +1,6 @@
+# ACR Image Trigger
+# cbellee.go-team-cd
+
 name: acrImageTrigger
 
 trigger:
@@ -10,7 +13,7 @@ resources:
       azureSubscription: 'Azure CXP FTA Internal Subscription CBELLEE (b2375b5f-8dab-4436-b87c-32bc7fdce5d0)'
       resourceGroup: go-team-acr-rg
       registry: acrd8f374
-      repository: go-team-api
+      repository: cbellee/go-team
       trigger: true
 
 variables:
@@ -45,9 +48,9 @@ stages:
           displayName: 'Run release'
           env:
             ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
-            COMMIT_MESSAGE: "Updating image tag to $(Build.BuildNumber)"
+            COMMIT_MESSAGE: "Updating image tag to $(Build.BuildId)"
             SUBCOMPONENT: 'go-team'
-            YAML_PATH_VALUE: $(Build.BuildNumber)
+            YAML_PATH_VALUE: $(Build.BuildId)
             YAML_PATH: image.tag
           inputs:
             targetType: inline
