@@ -26,6 +26,15 @@ stages:
   jobs:
     - job:
       steps:
+        - task: PowerShell@2
+          name: 'dumpenvvars'
+          displayName: "Dump Env Vars"
+          inputs:
+            targetType: inline
+            pwsh: true
+            script: |
+              dir env:
+              
         - task: Bash@3
           name: 'downloadscripts'
           displayName: 'Download Scripts'
