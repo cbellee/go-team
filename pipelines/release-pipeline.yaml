@@ -1,6 +1,5 @@
 # ACR Image Trigger
 # cbellee.go-team-cd
-trigger: none
 
 name: acrImageTrigger
 resources:
@@ -54,9 +53,9 @@ stages:
           displayName: 'Run release'
           env:
             ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
-            COMMIT_MESSAGE: "Updating image tag to $(Build.BuildId)"
+            COMMIT_MESSAGE: "Updating image tag to $(resources.container.acr_hook.tag)"
             SUBCOMPONENT: 'go-team'
-            YAML_PATH_VALUE: $(Build.BuildId)
+            YAML_PATH_VALUE: $(resources.container.acr_hook.tag)
             YAML_PATH: image.tag
           inputs:
             targetType: inline
