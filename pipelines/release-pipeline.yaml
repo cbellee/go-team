@@ -1,6 +1,6 @@
 # ACR Image Trigger
 # cbellee.go-team-cd
-trigger: none
+#trigger: none
 
 name: acrImageTrigger
 resources:
