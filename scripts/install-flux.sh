@@ -1,0 +1,2 @@
+./deploy_flux.sh -b 'master' -f 'https://github.com/weaveworks/flux.git' -g 'git@github.com:cbellee/flux-manifests.git' -k '/home/cbellee/.ssh/gitops-ssh-key' -d 
+'flux' -c '5m' -e 'dev' -s 'true' -r 'docker.io/weaveworks/flux' -t '1.12.2' -z 'false' -l 'flux'
