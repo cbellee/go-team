@@ -31,9 +31,9 @@ func getEnv(key, defaultValue string) string {
 }
 
 func main() {
-	dbUserName := getEnv("DB_USER_NAME", "root")
-	dbPassword := getEnv("DB_PASSWORD", "M1cr0soft")
-	dbHostName := getEnv("DB_HOST_NAME", "172.17.0.4")
+	dbUserName := getEnv("DB_USER_NAME", "dbadmin@dev-go-team-mysql")
+	dbPassword := getEnv("DB_PASSWORD", "M1cr0soft1234567890")
+	dbHostName := getEnv("DB_HOST_NAME", "dev-go-team-mysql.mysql.database.azure.com")
 	dbName := getEnv("DB_NAME", "goteamdb")
 	dbPort := getEnv("DB_PORT", "3306")
 	dbProtocol := getEnv("DB_PROTOCOL", "tcp")
