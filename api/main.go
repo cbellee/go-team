@@ -39,8 +39,9 @@ func main() {
 	dbProtocol := getEnv("DB_PROTOCOL", "tcp")
 
 	//("root:M1cr0soft@tcp(172.17.0.4:3306)/goteamdb?parseTime=true")
-	dbConnectionString := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?parseTime=true", dbUserName, dbPassword, dbProtocol, dbHostName, dbPort, dbName)
-
+	dbConnectionString := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?parseTime=true?allowNativePasswords=true", dbUserName, dbPassword, dbProtocol, dbHostName, dbPort, dbName)
+	//dbConnectionString := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?parseTime=true", dbUserName, dbPassword, dbProtocol, dbHostName, dbPort, dbName)
+	
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
 

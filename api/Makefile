@@ -1,16 +1,16 @@
 VERSION := $(shell git rev-parse --short HEAD)
 
 build:
-	docker build -t belstarr/go-team-api:${VERSION} .
+	docker build -t belstarr/go-team:${VERSION} .
 
 tag:
-	docker tag belstarr/go-team-api:${VERSION} belstarr/go-team-api:latest
+	docker tag belstarr/go-team:${VERSION} belstarr/go-team:latest
 
 run:
-	docker run -p 8080:8080 belstarr/go-team-api:${VERSION}
+	docker run -p 8080:8080 belstarr/go-team:${VERSION}
 
 push:
-	docker push belstarr/go-team-api:${VERSION}
+	docker push belstarr/go-team:${VERSION}
 
 check-swagger:
 	which swagger || (GO111MODULE=off go get -u github.com/go-swagger/go-swagger/cmd/swagger)
