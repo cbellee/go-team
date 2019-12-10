@@ -39,7 +39,6 @@ func main() {
 	dbProtocol := getEnv("DB_PROTOCOL", "tcp")
 
 	dbConnectionString := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?allowNativePasswords=true&parseTime=true&tls=true", dbUserName, dbPassword, dbProtocol, dbHostName, dbPort, dbName)
-	//dbConnectionString := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?parseTime=true", dbUserName, dbPassword, dbProtocol, dbHostName, dbPort, dbName)
 	
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
