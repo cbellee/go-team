@@ -38,6 +38,7 @@ func main() {
 	dbPort := getEnv("DB_PORT", "3306")
 	dbProtocol := getEnv("DB_PROTOCOL", "tcp")
 
+	// connection string
 	dbConnectionString := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?allowNativePasswords=true&parseTime=true&tls=true", dbUserName, dbPassword, dbProtocol, dbHostName, dbPort, dbName)
 	
 	e := echo.New()
