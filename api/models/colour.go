@@ -7,8 +7,8 @@ import (
 
 // Colour stores team colours
 type Colour struct {
-	gorm.Model        // fields `ID`, `CreatedAt`, `UpdatedAt`, `DeletedAt` will be added
-	TeamID     int    
+	gorm.Model // fields `ID`, `CreatedAt`, `UpdatedAt`, `DeletedAt` will be added
+	TeamID     int
 	Name       string `gorm:"unique_index:idx_name_code"`
 	Hex        string `gorm:"unique_index:idx_name_code"`
 }
@@ -21,6 +21,7 @@ func (db *DB) AllColours() ([]Colour, error) {
 	return colours, nil
 }
 
+//
 // GetColourByID returns a single colour given an ID (int)
 func (db *DB) GetColourByID(id int) (Colour, error) {
 	var colour Colour
