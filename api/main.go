@@ -35,11 +35,9 @@ func main() {
 	dbPassword := getEnv("DB_PASSWORD", "M1cr0soft1234567890")
 	dbHostName := getEnv("DB_HOST_NAME", "dev-go-team-mysql.mysql.database.azure.com")
 	dbName := getEnv("DB_NAME", "goteamdb")
-	dbPort := getEnv("DB_PORT", "3306")
-	dbProtocol := getEnv("DB_PROTOCOL", "tcp")
 
 	// connection string
-	dbConnectionString := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?allowNativePasswords=true&parseTime=true&tls=true", dbUserName, dbPassword, dbProtocol, dbHostName, dbPort, dbName)
+	dbConnectionString := fmt.Sprintf("%s:%s@tcp(%s:3606)/%s?allowNativePasswords=true&parseTime=true&tls=true", dbUserName, dbPassword, dbHostName, dbName)
 	
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
