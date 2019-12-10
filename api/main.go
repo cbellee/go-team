@@ -38,8 +38,7 @@ func main() {
 	dbPort := getEnv("DB_PORT", "3306")
 	dbProtocol := getEnv("DB_PROTOCOL", "tcp")
 
-	//("root:M1cr0soft@tcp(172.17.0.4:3306)/goteamdb?parseTime=true")
-	dbConnectionString := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?allowNativePasswords=true", dbUserName, dbPassword, dbProtocol, dbHostName, dbPort, dbName)
+	dbConnectionString := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?allowNativePasswords=true&parseTime=true&tls=true", dbUserName, dbPassword, dbProtocol, dbHostName, dbPort, dbName)
 	//dbConnectionString := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?parseTime=true", dbUserName, dbPassword, dbProtocol, dbHostName, dbPort, dbName)
 	
 	e := echo.New()
