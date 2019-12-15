@@ -1,0 +1,69 @@
+# ACR Image Trigger
+# cbellee.go-team-cd
+#trigger: none
+
+name: acrImageTrigger
+resources:
+  containers:
+  - container: acr_hook
+    type: ACR
+    azureSubscription: 'Azure CXP FTA Internal Subscription CBELLEE (b2375b5f-8dab-4436-b87c-32bc7fdce5d0)'
+    resourceGroup: go-team-acr-rg
+    registry: acrd8f374
+    repository: cbellee/go-team
+    trigger: true
+
+variables:
+  serviceConnection: 'Azure CXP FTA Internal Subscription CBELLEE (b2375b5f-8dab-4436-b87c-32bc7fdce5d0)'
+  acrConnection: 'acrd8f374-acr-cxn'
+  location: australiaeast
+  projectName: go-team
+  timeStamp: $[format('{0:yyyy}-{0:MM}-{0:dd}-{0:HHmmss}', pipeline.startTime)]
+
+stages:
+- stage: 'dev'
+  displayName: 'dev environment release'
+  jobs:
+    - job:
+      steps:
+        - task: PowerShell@2
+          name: 'dumpenvvars'
+          displayName: "Dump Env Vars"
+          inputs:
+            targetType: inline
+            pwsh: true
+            script: |
+              dir env:
+              
+        - task: Bash@3
+          name: 'downloadscripts'
+          displayName: 'Download Scripts'
+          inputs:
+            targetType: inline
+            script: |
+              # Download build.sh
+              curl https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/build.sh > build.sh
+              chmod +x ./build.sh
+
+              # Download release.sh
+              curl https://raw.githubusercontent.com/Microsoft/bedrock/master/gitops/azure-devops/release.sh > release.sh
+              chmod +x ./release.sh
+        
+        - task: Bash@3
+          name: 'runrelease'
+          displayName: 'Run release'
+          env:
+            ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN)
+            COMMIT_MESSAGE: "Updating image tag to $(resources.container.acr_hook.tag)"
+            SUBCOMPONENT: 'go-team'
+            YAML_PATH_VALUE: $(resources.container.acr_hook.tag)
+            YAML_PATH: image.tag
+          inputs:
+            targetType: inline
+            script: |
+              # execute release.sh
+              . release.sh
+              
+              
+      
+      

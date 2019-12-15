@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 # Build stage
+=======
+# build stage
+>>>>>>> 87ce71de57f6fac2dadffc2996d73276cb9da3a4
 FROM golang:alpine AS builder
 RUN apk --no-cache add build-base git gcc
 ADD . /src
 RUN cd /src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o go-team
 
+<<<<<<< HEAD
 # Create a "nobody" non-root user for the next image by crafting an /etc/passwd
 # file that the next image can copy in. This is necessary since the next image
 # is based on scratch, which doesn't have adduser, cat, echo, or even sh.
@@ -26,3 +31,11 @@ EXPOSE 8080
 # Run as the new non-root by default
 USER nobody
 CMD ["./go-team"]
+=======
+# final stage
+FROM scratch
+WORKDIR /app
+COPY --from=builder /src/go-team /app/
+EXPOSE 8080
+ENTRYPOINT ./go-team
+>>>>>>> 87ce71de57f6fac2dadffc2996d73276cb9da3a4

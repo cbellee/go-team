@@ -15,7 +15,10 @@ require (
 	github.com/mailru/easyjson v0.7.0 // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
+<<<<<<< HEAD
 	github.com/prometheus/client_golang v1.2.1 // indirect
+=======
+>>>>>>> 87ce71de57f6fac2dadffc2996d73276cb9da3a4
 	github.com/swaggo/echo-swagger v0.0.0-20190329130007-1219b460a043 // indirect
 	github.com/swaggo/swag v1.6.3 // indirect
 	github.com/valyala/fasttemplate v1.1.0 // indirect

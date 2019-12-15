@@ -17,6 +17,7 @@ type Player struct {
 
 // AllPlayers returns all Players
 func (db *DB) AllPlayers() ([]Player, error) {
+<<<<<<< HEAD
 	var player Player
 	var team Team
 	//var colour Colour
@@ -24,6 +25,13 @@ func (db *DB) AllPlayers() ([]Player, error) {
 	//db.Find(&players).Find(&colour)
 
 	return player, nil
+=======
+	var players []Player
+	var colour Colour
+	db.Find(&players).Find(&colour)
+
+	return players, nil
+>>>>>>> 87ce71de57f6fac2dadffc2996d73276cb9da3a4
 }
 
 // GetPlayerByID returns a single player
