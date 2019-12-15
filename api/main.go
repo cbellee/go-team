@@ -98,6 +98,6 @@ func main() {
 	e.POST("/colours", env.addColour)
 
 	e.Logger.Fatal(e.Start(":8080"))
-	http.Handle("/matrics", promhttp.Handler())
+	http.Handle("/metrics", promhttp.Handler())
 	http.ListenAndServer(":2112", nil)
 }
