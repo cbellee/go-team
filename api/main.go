@@ -96,8 +96,7 @@ func main() {
 	e.GET("/colours", env.allColours)
 	e.GET("/colours/:id", env.getColour)
 	e.POST("/colours", env.addColour)
+	e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 
 	e.Logger.Fatal(e.Start(":8080"))
-	http.Handle("/metrics", promhttp.Handler())
-	http.ListenAndServer(":2112", nil)
 }
