@@ -6,6 +6,7 @@ import (
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"log"
 	"os"
 )
@@ -38,8 +39,8 @@ func main() {
 
 	// connection string
 	dbConnectionString := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?allowNativePasswords=true&parseTime=true&tls=true", dbUserName, dbPassword, dbHostName, dbName)
-	fmt.Println(dbConnectionString)
 	
+	// echo instance
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
 
@@ -72,7 +73,7 @@ func main() {
 		models.Team{Name: "the green team", Colour: models.Colour{Name: "green", Hex: "#00FF00", TeamID: 2}, Players: []models.Player{
 			models.Player{FirstName: "John", LastName: "Lambert", Email: "j-lambery@microsoft.com", Phone: "0404689252", TeamID: 2},
 			models.Player{FirstName: "Doug", LastName: "Taylor", Email: "d.taylor@home.net", Phone: "0415464732", TeamID: 2},
-			models.Player{FirstName: "Kieth", LastName: "Jones", Email: "kjones@gmail.com", Phone: "0404004328", TeamID: 2},
+			models.Player{FirstName: "Keith", LastName: "Jones", Email: "kjones@gmail.com", Phone: "0404004328", TeamID: 2},
 		}},
 		models.Team{Name: "the blue team", Colour: models.Colour{Name: "blue", Hex: "#0000FF", TeamID: 3}, Players: []models.Player{
 			models.Player{FirstName: "Kelly", LastName: "Armitage", Email: "karma@yahoo.com", Phone: "0406393272", TeamID: 3},
@@ -95,6 +96,7 @@ func main() {
 	e.GET("/colours", env.allColours)
 	e.GET("/colours/:id", env.getColour)
 	e.POST("/colours", env.addColour)
+	e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

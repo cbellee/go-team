@@ -8,7 +8,11 @@ class App extends Component {
     return (
       <Tabs onSelect={(label => console.log(label + ' selected'))}>
         <Tab label="Players">
+<<<<<<< HEAD
+          <Players players={this.state.players} teams={this.state.teams}/>
+=======
           <Players players={this.state.players} />
+>>>>>>> 87ce71de57f6fac2dadffc2996d73276cb9da3a4
         </Tab>
         <Tab label="Teams">
           <Teams teams={this.state.teams} />

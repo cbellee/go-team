@@ -1,4 +1,4 @@
-# Build stage
+# build stage
 FROM golang:alpine AS builder
 RUN apk --no-cache add build-base git gcc
 ADD . /src
