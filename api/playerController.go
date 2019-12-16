@@ -21,6 +21,18 @@ func (env *Env) allPlayers(c echo.Context) error {
 	}
 }
 
+func (env *Env) allTeamPlayers(c echo.Context) error {
+	players, err := env.db.AllTeamPlayers()
+	if err != nil {
+		log.Panic(err)
+	}
+	if len(players) > 0 {
+		return c.JSON(http.StatusOK, players)
+	} else {
+		return c.NoContent(http.StatusNotFound)
+	}
+}
+
 func (env *Env) getPlayer(c echo.Context) error {
 	var id, err = strconv.Atoi(c.Param("id"))
 	player, err := env.db.GetPlayerByID(id)

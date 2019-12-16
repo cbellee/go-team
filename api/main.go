@@ -65,17 +65,17 @@ func main() {
 
 	// populate seed Data
 	var teams []models.Team = []models.Team{
-		models.Team{Name: "the red team", Colour: models.Colour{Name: "red", Hex: "#FF0000", TeamID: 1}, Players: []models.Player{
+		models.Team{Name: "the red team", Colour: models.Colour{Name: "red", Hex: "#FC9981", TeamID: 1}, Players: []models.Player{
 			models.Player{FirstName: "Chris", LastName: "Bellee", Email: "cbellee@microsoft.com", Phone: "0404636252", TeamID: 1},
 			models.Player{FirstName: "Dan", LastName: "Dare", Email: "ddare@gmail.com", Phone: "0405101949", TeamID: 1},
 			models.Player{FirstName: "Brian", LastName: "Eno", Email: "beno@moresharkthandark.net", Phone: "0404987654", TeamID: 1},
 		}},
-		models.Team{Name: "the green team", Colour: models.Colour{Name: "green", Hex: "#00FF00", TeamID: 2}, Players: []models.Player{
+		models.Team{Name: "the green team", Colour: models.Colour{Name: "green", Hex: "#78FF82", TeamID: 2}, Players: []models.Player{
 			models.Player{FirstName: "John", LastName: "Lambert", Email: "j-lambery@microsoft.com", Phone: "0404689252", TeamID: 2},
 			models.Player{FirstName: "Doug", LastName: "Taylor", Email: "d.taylor@home.net", Phone: "0415464732", TeamID: 2},
 			models.Player{FirstName: "Keith", LastName: "Jones", Email: "kjones@gmail.com", Phone: "0404004328", TeamID: 2},
 		}},
-		models.Team{Name: "the blue team", Colour: models.Colour{Name: "blue", Hex: "#0000FF", TeamID: 3}, Players: []models.Player{
+		models.Team{Name: "the blue team", Colour: models.Colour{Name: "blue", Hex: "#72DCFF", TeamID: 3}, Players: []models.Player{
 			models.Player{FirstName: "Kelly", LastName: "Armitage", Email: "karma@yahoo.com", Phone: "0406393272", TeamID: 3},
 			models.Player{FirstName: "Jason", LastName: "Spaceman", Email: "jspace@space.com.au", Phone: "0404333888", TeamID: 3},
 			models.Player{FirstName: "Andy", LastName: "Pandy", Email: "apandy@gmail.com", Phone: "0404845712", TeamID: 3},
@@ -88,6 +88,7 @@ func main() {
 	env := &Env{db}
 
 	e.GET("/players", env.allPlayers)
+	e.GET("/teamPlayers", env.allTeamPlayers)
 	e.GET("/players/:id", env.getPlayer)
 	e.POST("/players", env.addPlayer)
 	e.GET("/teams", env.allTeams)
