@@ -20,7 +20,6 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 # practice.
 COPY --from=builder /etc_passwd /etc/passwd
 
-# added a comment
 # expose port 
 EXPOSE 8080
 
