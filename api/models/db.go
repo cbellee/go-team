@@ -8,6 +8,7 @@ import (
 // Datastore interface
 type Datastore interface {
 	AllPlayers() ([]Player, error)
+	AllTeamPlayers() ([]TeamPlayer, error)
 	GetPlayerByID(id int) (Player, error)
 	AddPlayer(player Player) (Player, error)
 	AllTeams() ([]Team, error)
