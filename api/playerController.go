@@ -33,6 +33,19 @@ func (env *Env) allTeamPlayers(c echo.Context) error {
 	}
 }
 
+func (env *Env) getTeamPlayer(c echo.Context) error {
+	var id, err = strconv.Atoi(c.Param("id"))
+	teamPlayer, err := env.db.GetTeamPlayer(id)
+	if err != nil {
+		log.Panic(err)
+	}
+	if teamPlayer.ID >= 0 {
+		return c.JSON(http.StatusOK, teamPlayer)
+	} else {
+		return c.NoContent(http.StatusNotFound)
+	}
+}
+
 func (env *Env) getPlayer(c echo.Context) error {
 	var id, err = strconv.Atoi(c.Param("id"))
 	player, err := env.db.GetPlayerByID(id)

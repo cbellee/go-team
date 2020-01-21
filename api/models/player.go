@@ -43,11 +43,17 @@ func (db *DB) AllTeamPlayers() ([]TeamPlayer, error) {
 	return teamPlayers, nil
 }
 
+// TeamPlayer returns player & team information
+func (db *DB) GetTeamPlayer(id int) (TeamPlayer, error) {
+	var teamPlayer TeamPlayer
+	db.Table("players").Select("players.id, players.first_name, players.last_name, players.phone, players.email, teams.id as team_id, teams.name as team_name, colours.name as team_colour, colours.id as team_colour_id, colours.hex as team_colour_hex").Joins("join teams on teams.id = players.team_id").Joins("join colours on colours.team_id = teams.id").Where("players.id = ?", id).Scan(&teamPlayer)
+	return teamPlayer, nil
+}
+
 // GetPlayerByID returns a single player
 func (db *DB) GetPlayerByID(id int) (Player, error) {
 	var player Player
 	db.First(&player, id)
-
 	return player, nil
 }
 

@@ -1,28 +1,50 @@
 import React from 'react';
-import { Card, CardBlock, CardFooter, CardTitle, CardText } from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
+import Card from 'react-bootstrap/Card';
+import { Link } from 'react-router-dom';
 
-const Players = ({ players }) => {
-    return (
-        <Card>
-            <CardBlock>
-                <CardTitle>
-                    Player List
-                </CardTitle>
-                <CardText>
-                    {players.map((player) => (
-                        player.FirstName
-                        //<div class="card" key={player.ID}>
-                        //<div class="card-body" style={{ backgroundColor: player.TeamColourHex }}>
-                        //<h5 class="card-title">{player.FirstName} {player.LastName}</h5>
-                        //</div>
-                        //</div>
-                    ))}
-                </CardText>
-            </CardBlock>
-            <CardFooter>
-            </CardFooter>
-        </Card>
-    )
-};
+class Players extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isFetching: false,
+            teamPlayers: []
+        }
+    }
+
+    componentDidMount() {
+        this.PlayerList();
+    }
+
+    PlayerList() {
+        fetch('http://localhost:8080/teamPlayers')
+            .then(res => res.json())
+            .then((data) => {
+                this.setState({ teamPlayers: data })
+            })
+            .catch(console.log)
+    }
+
+    render() {
+        const players = this.state.teamPlayers.map((player) => (
+            <Container>
+                <Card key={player.ID}>
+                    <Card.Header style={{ background: player.TeamColourHex }}>
+                        {player.TeamName}
+                    </Card.Header>
+                    <Card.Body>
+                        <Card.Title><Link to={"/players/" + player.ID}> {player.FirstName} {player.LastName}</Link></Card.Title>
+                        <Card.Subtitle>{player.Email}</Card.Subtitle>
+                        <Card.Text></Card.Text>
+                    </Card.Body>
+                    <Card.Footer>
+                    </Card.Footer>
+                </Card>
+            </Container>
+        ));
+
+        return (<div>{players}</div>)
+    }
+}
 
 export default Players

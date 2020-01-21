@@ -89,7 +89,8 @@ func main() {
 
 	e.GET("/players", env.allPlayers)
 	e.GET("/teamPlayers", env.allTeamPlayers)
-	e.GET("/players/:id", env.getPlayer)
+	e.GET("/teamPlayers/:id", env.getTeamPlayer)
+	e.GET("/players/:id", env.getTeamPlayer)
 	e.POST("/players", env.addPlayer)
 	e.GET("/teams", env.allTeams)
 	e.GET("/teams/:id", env.getTeam)
