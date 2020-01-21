@@ -5,6 +5,8 @@ trigger:
   branches:
     include:
     - master
+    - dev
+    - stg
   paths:
     include:
     - api/*
