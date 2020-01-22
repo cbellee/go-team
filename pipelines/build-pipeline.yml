@@ -20,7 +20,7 @@ variables:
   version.Minor: 1
   version.Patch: 0
   version.Revision: $[counter(variables['version.Patch'], 0)]
-  imageVersion: "$(Build.SourceBranchName)-$(version.Major).$(version.Minor).$(version.Patch).$(Build.BuildId)"
+  imageVersion: "$(version.Major).$(version.Minor).$(version.Patch).$(Build.BuildId)"
   imageName: $(Build.Repository.Name)
 
 steps:
@@ -32,5 +32,5 @@ steps:
     scriptType: 'pscore'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az acr build --registry $(acrName) --image $(imageName):$(imageVersion) ./api
+      az acr build --registry $(acrName) --image $(imageName):$(Build.SourceBranchName)-$(imageVersion) ./api
     
