@@ -5,6 +5,8 @@ trigger:
   branches:
     include:
     - master
+    - dev
+    - stg
   paths:
     include:
     - api/*
@@ -30,5 +32,4 @@ steps:
     scriptType: 'pscore'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az acr build --registry $(acrName) --image $(imageName):$(imageVersion) ./api
-    
+      az acr build --registry $(acrName) --image $(imageName):$(Build.SourceBranchName)-$(imageVersion) ./api
