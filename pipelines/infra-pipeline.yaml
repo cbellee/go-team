@@ -3,7 +3,7 @@ name: aks_release
 variables:
   serviceConnection: 'Azure CXP FTA Internal Subscription CBELLEE (b2375b5f-8dab-4436-b87c-32bc7fdce5d0)'
   location: australiaeast
-  project: goshop
+  project: go-team
   acrResourceGroupName: $(project)-acr-rg
   containerName: 'templates'
   timeStamp: $[format('{0:yyyy}-{0:MM}-{0:dd}-{0:HHmmss}', pipeline.startTime)]
@@ -22,7 +22,7 @@ stages:
   displayName: 'dev release'
   variables:
     environmentName: dev
-    resourceGroupName: $(project)-$(environmentName)-aks-rg
+    resourceGroupName: $(environmentName)-$(project)-rg
     tags: '{"costCentre":"478132","project":"$(projectName)"}'
   jobs:
     - deployment: 
