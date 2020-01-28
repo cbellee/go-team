@@ -103,7 +103,6 @@ stages:
                 -aksMinNodeCount 1
                 -aksMaxNodeCount 5
                 -maxPods 50
-                -outboundIpCount 2
                 -aksServicePrincipalObjectId $(aksServicePrincipalObjectId)
                 -aksServicePrincipalAppId $(aksServicePrincipalAppId)
                 -aksServicePrincipalSecret $(aksServicePrincipalSecret)
