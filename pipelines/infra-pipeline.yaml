@@ -3,7 +3,7 @@ name: aks_release
 variables:
   serviceConnection: 'Azure CXP FTA Internal Subscription CBELLEE (b2375b5f-8dab-4436-b87c-32bc7fdce5d0)'
   location: australiaeast
-  project: go-team
+  project: git-ops
   acrResourceGroupName: $(project)-acr-rg
   containerName: 'templates'
   timeStamp: $[format('{0:yyyy}-{0:MM}-{0:dd}-{0:HHmmss}', pipeline.startTime)]
