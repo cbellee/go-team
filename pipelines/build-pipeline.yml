@@ -26,7 +26,7 @@ variables:
 steps:
 - task: AzureCLI@2
   displayName: 'Push and Build Image in ACR'
-  enabled: true
+  enabled: false
   inputs:
     azureSubscription: $(serviceConnection)
     scriptType: 'pscore'
@@ -34,3 +34,11 @@ steps:
     inlineScript: |
       az acr build --registry $(acrName) --image $(imageName):$(Build.SourceBranchName)-$(imageVersion) ./api
     
+- task: Docker@2
+  inputs:
+    containerRegistry: 'belstarr.docker.io'
+    repository: 'go-team'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    buildContext: './api'
+    tags: '$(Build.SourceBranchName)-$(imageVersion)'
