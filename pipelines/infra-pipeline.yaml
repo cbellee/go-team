@@ -7,15 +7,15 @@ variables:
   acrResourceGroupName: $(project)-acr-rg
   containerName: 'templates'
   timeStamp: $[format('{0:yyyy}-{0:MM}-{0:dd}-{0:HHmmss}', pipeline.startTime)]
-  aksVersion: 1.15.5
+  aksVersion: 1.15.7
   aksNodeCount: 1
   maxPods: 50
   aksMinNodeCount: 1
   aksMaxNodeCount: 5
   aksNodeVMSize: Standard_F2s_v2
   armTemplatePath: templates
-  aksServicePrincipalAppId: de3ef06a-2824-4dce-b714-65ba1b5e0744
-  aksServicePrincipalObjectId: d37981d6-bc89-4019-8c51-96a111f0bf62
+  aksServicePrincipalAppId: 10c31117-33c3-4e7e-91a3-06dfeab08e7a
+  aksServicePrincipalObjectId: ea643794-7b9d-4e5d-90cd-c83e02c2b52d
 
 stages:
 - stage: 'dev'
